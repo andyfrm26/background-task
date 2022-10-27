@@ -56,27 +56,25 @@ public class MainActivity extends AppCompatActivity{
         _slotGame2 = new SlotGame(_image2);
         _slotGame3 = new SlotGame(_image3);
 
-//        if(imageUrl.isEmpty()){
-            _imageExecService.execute(new Runnable() {
-                @Override
-                public void run() {
+        _imageExecService.execute(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    final String txt = loadStringFromNetwork("https://mocki.io/v1/821f1b13-fa9a-43aa-ba9a-9e328df8270e");
                     try{
-                        final String txt = loadStringFromNetwork("https://mocki.io/v1/821f1b13-fa9a-43aa-ba9a-9e328df8270e");
-                        try{
-                            JSONArray jsonArray = new JSONArray(txt);
-                            for(int i = 0; i < jsonArray.length(); i++){
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                imageUrl.add(jsonObject.getString("url"));
-                            }
-                        }catch (JSONException e){
-                            e.printStackTrace();
+                        JSONArray jsonArray = new JSONArray(txt);
+                        for(int i = 0; i < jsonArray.length(); i++){
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            imageUrl.add(jsonObject.getString("url"));
                         }
-                    }catch (IOException e){
+                    }catch (JSONException e){
                         e.printStackTrace();
-                    };
-                }
-            });
-//        }
+                    }
+                }catch (IOException e){
+                    e.printStackTrace();
+                };
+            }
+        });
 
         _startStopButton.setOnClickListener(new View.OnClickListener(){
             @Override
