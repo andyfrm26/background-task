@@ -24,40 +24,40 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity{
-    ImageView image1;
-    ImageView image2;
-    ImageView image3;
+    ImageView _image1;
+    ImageView _image2;
+    ImageView _image3;
 
-    Button startStopButton;
+    Button _startStopButton;
 
-    boolean isRolling = false;
+    boolean _isRolling = false;
 
     ArrayList<String> imageUrl = new ArrayList<>();
 
-    SlotGame slotGame1, slotGame2, slotGame3;
-    ExecutorService rollExecService, imageExecService;
+    SlotGame _slotGame1, _slotGame2, _slotGame3;
+    ExecutorService _rollExecService, _imageExecService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        image1 = findViewById(R.id.image_1);
-        image2 = findViewById(R.id.image_2);
-        image3 = findViewById(R.id.image_3);
+        _image1 = findViewById(R.id.image_1);
+        _image2 = findViewById(R.id.image_2);
+        _image3 = findViewById(R.id.image_3);
 
-        startStopButton = findViewById(R.id.start_stop_btn);
+        _startStopButton = findViewById(R.id.start_stop_btn);
 
-        imageExecService = Executors.newSingleThreadExecutor();
+        _imageExecService = Executors.newSingleThreadExecutor();
 
-        rollExecService = Executors.newFixedThreadPool(3);
+        _rollExecService = Executors.newFixedThreadPool(3);
 
-        slotGame1 = new SlotGame(image1);
-        slotGame2 = new SlotGame(image2);
-        slotGame3 = new SlotGame(image3);
+        _slotGame1 = new SlotGame(_image1);
+        _slotGame2 = new SlotGame(_image2);
+        _slotGame3 = new SlotGame(_image3);
 
-        if(imageUrl.isEmpty()){
-            imageExecService.execute(new Runnable() {
+//        if(imageUrl.isEmpty()){
+            _imageExecService.execute(new Runnable() {
                 @Override
                 public void run() {
                     try{
@@ -76,31 +76,31 @@ public class MainActivity extends AppCompatActivity{
                     };
                 }
             });
-        }
+//        }
 
-        startStopButton.setOnClickListener(new View.OnClickListener(){
+        _startStopButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                if(v.getId() == startStopButton.getId()){
-                    if(!isRolling){
-                        slotGame1.isRolling = true;
-                        slotGame2.isRolling = true;
-                        slotGame3.isRolling = true;
+                if(v.getId() == _startStopButton.getId()){
+                    if(!_isRolling){
+                        _slotGame1._rolling = true;
+                        _slotGame2._rolling = true;
+                        _slotGame3._rolling = true;
 
-                        rollExecService.execute(slotGame1);
-                        rollExecService.execute(slotGame2);
-                        rollExecService.execute(slotGame3);
+                        _rollExecService.execute(_slotGame1);
+                        _rollExecService.execute(_slotGame2);
+                        _rollExecService.execute(_slotGame3);
 
-                        startStopButton.setText("Stop");
+                        _startStopButton.setText("Stop");
 
                     } else {
-                        slotGame1.isRolling = false;
-                        slotGame2.isRolling = false;
-                        slotGame3.isRolling = false;
+                        _slotGame1._rolling = false;
+                        _slotGame2._rolling = false;
+                        _slotGame3._rolling = false;
 
-                        startStopButton.setText("Start");
+                        _startStopButton.setText("Start");
                     }
-                    isRolling = !isRolling;
+                    _isRolling = !_isRolling;
                 }
             }
         });
@@ -126,30 +126,30 @@ public class MainActivity extends AppCompatActivity{
 
     class SlotGame implements Runnable {
         Handler handler = new Handler(Looper.getMainLooper());
-        ImageView slotImage;
-        Random randomNumber = new Random();
-        public boolean isRolling = true;
+        ImageView _slotImage;
+        Random _randomNumber = new Random();
+        public boolean _rolling;
         int i;
 
-        public SlotGame(ImageView slotImage){
-            this.slotImage = slotImage;
+        public SlotGame(ImageView _slotImage){
+            this._slotImage = _slotImage;
             i = 0;
-            isRolling = true;
+            _rolling = true;
         }
 
         @Override
         public void run() {
-            while(isRolling){
-                i = randomNumber.nextInt(3);
+            while(_rolling){
+                i = _randomNumber.nextInt(3);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Glide.with(MainActivity.this).load(imageUrl.get(i)).into(slotImage);
+                        Glide.with(MainActivity.this).load(imageUrl.get(i)).into(_slotImage);
                     }
                 });
 
                 try{
-                    Thread.sleep(randomNumber.nextInt(500));
+                    Thread.sleep(_randomNumber.nextInt(500));
                 } catch(InterruptedException e){
                     e.printStackTrace();
                 }
